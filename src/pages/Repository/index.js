@@ -28,7 +28,7 @@ export default class Repository extends Component {
     repository: {},
     issues: [],
     loading: true,
-    state: 'all',
+    state: '',
     page: 1,
   };
 
@@ -94,6 +94,7 @@ export default class Repository extends Component {
     } else {
       nextPage = page - 1;
     }
+
     const repoName = decodeURIComponent(match.params.repository);
     const issues = await api.get(`repos/${repoName}/issues`, {
       params: {
