@@ -6,4 +6,3 @@ Este é um pequeno e simples projeto feito como parte dos meus estudos de React.
   - Captura de erros e exebição toastify
   - Paginação e filtro na página de Issues
 
-Para contato acesse meu [LinkedIn] (https://www.linkedin.com/in/leonardo-santana-jr-a49a49184/)
