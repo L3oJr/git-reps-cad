@@ -89,7 +89,7 @@ export default class Repository extends Component {
     const { page, state } = this.state;
     let nextPage;
 
-    if (direction === 'right') {
+    if (direction === 'forward') {
       nextPage = page + 1;
     } else {
       nextPage = page - 1;
@@ -139,19 +139,20 @@ export default class Repository extends Component {
           <Pagination>
             <button
               type="button"
-              onClick={(e) => this.handlePageChange('left', e)}
+              onClick={(e) => this.handlePageChange('backward', e)}
               disabled={!(page > 1)}
             >
               <FaChevronLeft />
             </button>
             <button
               type="button"
-              onClick={(e) => this.handlePageChange('right', e)}
+              onClick={(e) => this.handlePageChange('forward', e)}
             >
               <FaChevronRight />
             </button>
           </Pagination>
         </Controls>
+
         <IssueList>
           {issues.map((issue) => (
             <li key={String(issue.id)}>
