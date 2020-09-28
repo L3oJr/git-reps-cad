@@ -16,7 +16,7 @@ export const Owner = styled.header`
   align-items: center;
 
   a {
-    color: #7159c1;
+    color: #2452ad;
     font-size: 16px;
     text-decoration: none;
   }
@@ -78,7 +78,7 @@ export const IssueList = styled.ul`
         color: #333;
 
         &:hover {
-          color: #7159c1;
+          color: #2452ad;
         }
       }
       span {
@@ -101,12 +101,12 @@ export const IssueList = styled.ul`
 `;
 
 export const IssueState = styled.div`
-  color: #7159c1;
+  color: #2452ad;
   font-size: 16px;
   font-weight: bold;
 
   select {
-    background: #7159c1;
+    background: #2452ad;
     color: #eee;
 
     margin-left: 10px;
@@ -121,11 +121,11 @@ export const IssueState = styled.div`
 `;
 
 export const Pagination = styled.div`
-  color: #7159c1;
+  color: #2452ad;
   font-size: 16px;
 
   button {
-    background: #7159c1;
+    background: #2452ad;
     color: #eee;
     border: 0;
     margin-left: 10px;
