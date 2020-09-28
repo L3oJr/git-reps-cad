@@ -1,4 +1,4 @@
-# Github Repositories Simple Register
+# Github Repositories Simple Cadastre
 
 Este é um pequeno e simples projeto feito como parte dos meus estudos de React.
 
