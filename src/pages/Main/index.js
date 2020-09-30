@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaGithubAlt, FaPlus, FaSpinner } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { toast, Zoom, ToastContainer } from 'react-toastify';
+import { toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import api from '../../services/api';
@@ -9,45 +9,41 @@ import api from '../../services/api';
 import Container from '../../components/Container';
 import { Form, SubmitButton, List } from './styles';
 
-export default class Main extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      newRepo: '',
-      repositories: [],
-      loading: false,
-      founded: true,
-    };
-  }
+export default function Main() {
+  const [newRepo, setNewRepo] = useState('');
+  const [repositories, setRepositories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [founded, setFounded] = useState(true);
 
-  // Carregar os dados do localStorage
-  componentDidMount() {
-    const repositories = localStorage.getItem('repositories');
+  useEffect(() => {
+    const repos = localStorage.getItem('repositories');
 
-    if (repositories) {
-      this.setState({ repositories: JSON.parse(repositories) });
+    if (repos) {
+      setRepositories({ repositories: JSON.parse(repos) });
     }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('respositories', JSON.stringify(repositories));
+  }, [repositories]);
+
+  function handleAddRepo(data) {
+    setRepositories([...repositories, data]);
+    setNewRepo('');
+    setLoading(false);
+    setFounded(true);
   }
 
-  // Salvar os dados do localStorage
-  componentDidUpdate(_, prevState) {
-    const { repositories } = this.state;
-    if (prevState.repositories !== repositories) {
-      localStorage.setItem('repositories', JSON.stringify(repositories));
-    }
+  function handleInputChange(e) {
+    setFounded(true);
+    setNewRepo(e.target.value);
   }
 
-  handleInputChange = (e) => {
-    this.setState({ founded: true, newRepo: e.target.value });
-  };
-
-  handleSubmit = async (e) => {
+  async function handleSubmit(e) {
     try {
       e.preventDefault();
 
-      this.setState({ loading: true });
-
-      const { newRepo, repositories } = this.state;
+      setLoading(true);
 
       if (newRepo === '') throw new Error('Informe um repositório');
 
@@ -60,14 +56,11 @@ export default class Main extends Component {
         name: response.data.full_name,
       };
 
-      this.setState({
-        repositories: [...repositories, data],
-        newRepo: '',
-        loading: false,
-        founded: true,
-      });
+      handleAddRepo(data);
     } catch (err) {
-      this.setState({ newRepo: '', loading: false, founded: false });
+      setNewRepo('');
+      setLoading(false);
+      setFounded(false);
       if (err.message.includes('404'))
         err.message = 'Repositório não encontrado!';
       const error = (msg) =>
@@ -76,47 +69,43 @@ export default class Main extends Component {
         });
       error(err.message);
     }
-  };
-
-  render() {
-    const { newRepo, repositories, loading, founded } = this.state;
-    return (
-      <>
-        <Container>
-          <h1>
-            <FaGithubAlt />
-            Repositórios
-          </h1>
-
-          <Form onSubmit={this.handleSubmit} founded={founded}>
-            <input
-              type="text"
-              placeholder="Adicionar repositório (Ex: dono/repositório)"
-              value={newRepo}
-              onChange={this.handleInputChange}
-            />
-
-            <SubmitButton loading={loading}>
-              {loading ? (
-                <FaSpinner color="#FFF" size={14} />
-              ) : (
-                <FaPlus color="#FFF" size={14} />
-              )}
-            </SubmitButton>
-          </Form>
-          <List>
-            {repositories.map((repository) => (
-              <li key={repository.name}>
-                <span>{repository.name}</span>
-                <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
-                  Detalhes
-                </Link>
-              </li>
-            ))}
-          </List>
-        </Container>
-        <ToastContainer style={{ width: '200px' }} />
-      </>
-    );
   }
+
+  return (
+    <>
+      <Container>
+        <h1>
+          <FaGithubAlt />
+          Repositórios
+        </h1>
+
+        <Form onSubmit={handleSubmit} founded={founded}>
+          <input
+            type="text"
+            placeholder="Adicionar repositório (Ex: dono/repositório)"
+            value={newRepo}
+            onChange={handleInputChange}
+          />
+
+          <SubmitButton loading={loading}>
+            {loading ? (
+              <FaSpinner color="#FFF" size={14} />
+            ) : (
+              <FaPlus color="#FFF" size={14} />
+            )}
+          </SubmitButton>
+        </Form>
+        <List>
+          {repositories.map((repository) => (
+            <li key={repository.name}>
+              <span>{repository.name}</span>
+              <Link to={`/repository/${encodeURIComponent(repository.name)}`}>
+                Detalhes
+              </Link>
+            </li>
+          ))}
+        </List>
+      </Container>
+    </>
+  );
 }
